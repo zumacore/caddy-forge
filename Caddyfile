@@ -1,0 +1,8 @@
+example.com {
+    root * /srv
+    file_server
+}
+
+admin.example.com {
+    reverse_proxy portainer:9000
+}

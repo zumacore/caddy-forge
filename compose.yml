@@ -1,0 +1,37 @@
+version: '3.7'
+
+networks:
+  caddy:
+    external: true
+
+services:
+  caddy:
+    image: caddy:2.7.6-alpine
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    networks:
+      - caddy
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/example.com/public:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+  portainer:
+    image: portainer/portainer-ce:latest
+    command: -H unix:///var/run/docker.sock
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - caddy
+
+volumes:
+  caddy_data:
+  caddy_config:
+  portainer_data:
